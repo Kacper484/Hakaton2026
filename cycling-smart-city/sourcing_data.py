@@ -19,10 +19,13 @@ logger = logging.getLogger(__name__)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 ox.settings.requests_timeout = 600
 
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_CONFIG_PATH = BASE_DIR / "config.ini"
+
 def load_config() -> configparser.ConfigParser:
     """Loads the configuration from the config.ini file."""
     config = configparser.ConfigParser()
-    config.read("config.ini")
+    config.read(DEFAULT_CONFIG_PATH)
     return config
 
 @dataclass
@@ -91,6 +94,15 @@ class LocalGeoData:
     greenery_df: gpd.GeoDataFrame = field(init=False)
     cycling_paths_df: gpd.GeoDataFrame = field(init=False)
 
+    def _resolve_path(self, path_str: str | None) -> Path | None:
+        if not path_str:
+            return None
+
+        path = Path(path_str)
+        if path.is_absolute():
+            return path
+        return BASE_DIR / path
+
     def __post_init__(self):
         logging.info("Starting local data ingestion...")
         data_cfg = self.config['DATA']
@@ -99,23 +111,28 @@ class LocalGeoData:
         self.bike_infrastructure_df = self._read_geo_file(data_cfg.get("BIKE_INFRASTRUCTURE_PATH"))
         self.cycling_paths_df = self._read_geo_file(data_cfg.get("CYCLING_PATHS_PATH"))
         
-        noise_root = Path(data_cfg.get("NOISE_DIR"))
+        noise_root = self._resolve_path(data_cfg.get("NOISE_DIR"))
         self.noise_map_df = self._load_recursive_geojson(noise_root)
         
-        greenery_root = Path(data_cfg.get("GREENERY_DIR"))
+        greenery_root = self._resolve_path(data_cfg.get("GREENERY_DIR"))
         self.greenery_df = self._load_greenery(greenery_root)
         
         logging.info("Data successfully loaded into DataClass.")
 
     def _read_geo_file(self, path_str: str) -> gpd.GeoDataFrame:
         """Helper to safely read a single file."""
-        if path_str and Path(path_str).exists():
-            return gpd.read_file(path_str)
+        resolved = self._resolve_path(path_str)
+        if resolved and resolved.exists():
+            return gpd.read_file(resolved)
         logging.warning(f"File path not found: {path_str}")
         return gpd.GeoDataFrame()
 
-    def _load_recursive_geojson(self, folder_path: Path) -> gpd.GeoDataFrame:
+    def _load_recursive_geojson(self, folder_path: Path | None) -> gpd.GeoDataFrame:
         """Finds all geojson files in nested folders and merges them."""
+        if not folder_path or not folder_path.exists():
+            logging.warning(f"Noise directory not found: {folder_path}")
+            return gpd.GeoDataFrame()
+
         files = list(folder_path.rglob("*.geojson"))
         if not files:
             return gpd.GeoDataFrame()
@@ -123,8 +140,12 @@ class LocalGeoData:
         logging.info(f"Merging {len(files)} noise map layers...")
         return gpd.GeoDataFrame(pd.concat([gpd.read_file(f) for f in files], ignore_index=True))
 
-    def _load_greenery(self, base_path: Path) -> gpd.GeoDataFrame:
+    def _load_greenery(self, base_path: Path | None) -> gpd.GeoDataFrame:
         """Merges PTLZ, PTTR, and PTUT shapefiles into one GeoDataFrame."""
+        if not base_path or not base_path.exists():
+            logging.warning(f"Greenery directory not found: {base_path}")
+            return gpd.GeoDataFrame()
+
         categories = ["PTLZ", "PTTR", "PTUT"]
         all_dfs = []
         

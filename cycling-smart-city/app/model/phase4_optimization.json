@@ -1,0 +1,144 @@
+{
+  "n_samples": 3038,
+  "feature_columns": [
+    "bike_racks_count",
+    "bike_infra_points_count",
+    "buildings_count",
+    "noise_area_share",
+    "greenery_area_share",
+    "cycling_path_length_m",
+    "street_length_m",
+    "bike_path_coverage_ratio"
+  ],
+  "best_model": "HDBSCAN_mcs25",
+  "results": [
+    {
+      "model": "HDBSCAN_mcs10",
+      "params": {
+        "min_cluster_size": 10
+      },
+      "n_clusters": 37,
+      "n_noise_points": 1445,
+      "silhouette": 0.6913067838485879,
+      "davies_bouldin": 0.5375622068005225,
+      "calinski_harabasz": 462.2255818418291
+    },
+    {
+      "model": "HDBSCAN_mcs15",
+      "params": {
+        "min_cluster_size": 15
+      },
+      "n_clusters": 23,
+      "n_noise_points": 1672,
+      "silhouette": 0.7824228652056495,
+      "davies_bouldin": 0.4671279064746857,
+      "calinski_harabasz": 587.9314690853373
+    },
+    {
+      "model": "HDBSCAN_mcs25",
+      "params": {
+        "min_cluster_size": 25
+      },
+      "n_clusters": 12,
+      "n_noise_points": 1819,
+      "silhouette": 0.7989387043260063,
+      "davies_bouldin": 0.45852242385825,
+      "calinski_harabasz": 1031.4644495493374
+    },
+    {
+      "model": "HDBSCAN_mcs40",
+      "params": {
+        "min_cluster_size": 40
+      },
+      "n_clusters": 6,
+      "n_noise_points": 1329,
+      "silhouette": 0.6710429732372406,
+      "davies_bouldin": 0.4625836135082905,
+      "calinski_harabasz": 3374.520730865041
+    },
+    {
+      "model": "KMeans_k4",
+      "params": {
+        "k": 4
+      },
+      "n_clusters": 4,
+      "n_noise_points": 0,
+      "silhouette": 0.5103092091589572,
+      "davies_bouldin": 1.1968082439248728,
+      "calinski_harabasz": 1005.7296123170272,
+      "stability_ari": 0.9993136675511277
+    },
+    {
+      "model": "KMeans_k5",
+      "params": {
+        "k": 5
+      },
+      "n_clusters": 5,
+      "n_noise_points": 0,
+      "silhouette": 0.5353892918048869,
+      "davies_bouldin": 0.8216545195241315,
+      "calinski_harabasz": 1237.5414057095147,
+      "stability_ari": 1.0
+    },
+    {
+      "model": "KMeans_k6",
+      "params": {
+        "k": 6
+      },
+      "n_clusters": 6,
+      "n_noise_points": 0,
+      "silhouette": 0.560496093058991,
+      "davies_bouldin": 0.8309702509896857,
+      "calinski_harabasz": 1374.1398291325283,
+      "stability_ari": 0.9987046140808743
+    },
+    {
+      "model": "KMeans_k8",
+      "params": {
+        "k": 8
+      },
+      "n_clusters": 8,
+      "n_noise_points": 0,
+      "silhouette": 0.5714802507640214,
+      "davies_bouldin": 0.8011144384004482,
+      "calinski_harabasz": 1357.0387040391302,
+      "stability_ari": 0.9350635125315385
+    },
+    {
+      "model": "KMeans_k10",
+      "params": {
+        "k": 10
+      },
+      "n_clusters": 10,
+      "n_noise_points": 0,
+      "silhouette": 0.5599702759816105,
+      "davies_bouldin": 0.8067533235224927,
+      "calinski_harabasz": 1380.9869068865828,
+      "stability_ari": 0.818795010717409
+    },
+    {
+      "model": "IsolationForest_c0.05",
+      "params": {
+        "contamination": 0.05
+      },
+      "n_anomalies": 152,
+      "anomaly_fraction": 0.050032916392363395
+    },
+    {
+      "model": "IsolationForest_c0.1",
+      "params": {
+        "contamination": 0.1
+      },
+      "n_anomalies": 304,
+      "anomaly_fraction": 0.10006583278472679
+    },
+    {
+      "model": "IsolationForest_c0.15",
+      "params": {
+        "contamination": 0.15
+      },
+      "n_anomalies": 456,
+      "anomaly_fraction": 0.15009874917709018
+    }
+  ]
+}

@@ -11,10 +11,11 @@ networkx
 pulp
 plotly
 ipywidgets
-
-
-
-
-
-
+scikit-learn
+pytest
 urllib3
+h3==3.7.7
+pyogrio
+pyarrow
+dash
+dash-bootstrap-components
