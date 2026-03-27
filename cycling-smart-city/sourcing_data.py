@@ -131,7 +131,7 @@ class LocalGeoData:
         for cat in categories:
             cat_folder = base_path / cat
             for shp in cat_folder.glob("*.shp"):
-                df = gpd.read_file(shp)
+                df = gpd.read_file(shp, engine="pyogrio")
                 df['greenery_category'] = cat
                 all_dfs.append(df)
         
